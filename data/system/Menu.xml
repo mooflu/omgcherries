@@ -1,0 +1,187 @@
+<Menu 
+    Text="OMG Cherries!"
+    Info=""
+    Position="0.0 0.0">
+
+    <ActionItem 
+        Text="Play" 
+        Action="NewGame" 
+	Info="Start a new game!"
+	Size="4.0"
+        Position="450.0 235.0"/>
+
+    <Menu 
+        Text="Scores" 
+        Info="The Top-10 scores"
+	Size="1.5"
+	Position="80.0 460.0">
+
+        <LeaderBoard 
+	    Text="Leader Board:"
+	    Info="Top-10"
+	    Size="1.0"
+	    Position="500.0 470.0" />
+    </Menu>
+
+    <Menu 
+        Text="Help" 
+	Size="1.5"
+        Info="The story, your mission, and tips'n tricks"
+	Position="80.0 90.0">
+
+        <ImageItem 
+	    Text="wheels"
+	    Size="1.0"
+	    Position="50.0 550.0" />
+        <TextItem 
+	    Text="Cherry picker Larry"
+	    Size="1.2"
+	    Position="150.0 520.0" />
+
+        <ImageItem 
+	    Text="worm"
+	    Size="1.0"
+	    Position="50.0 470.0" />
+        <TextItem 
+	    Text="Willy the worm"
+	    Size="1.2"
+	    Position="150.0 440.0" />
+
+        <ImageItem 
+	    Text="cherrySmall"
+	    Size="1.0"
+	    Position="50.0 390.0" />
+        <ImageItem 
+	    Text="cherrySmall"
+	    Size="1.0"
+	    Position="80.0 390.0" />
+        <TextItem 
+	    Text="Cherries!"
+	    Size="1.2"
+	    Position="150.0 360.0" />
+
+        <ImageItem 
+	    Text="banana"
+	    Size="2.0"
+	    Position="50.0 310.0" />
+        <TextItem 
+	    Text="Banana"
+	    Size="1.2"
+	    Position="150.0 280.0" />
+
+        <TextItem 
+	    Text="Help Larry collect all cherries and avoid Willy the worm."
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 220.0" />
+        <TextItem 
+	    Text="Willy's really grouchy and wants all the cherries for himself."
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 180.0" />
+        <TextItem 
+	    Text="Him and his friends will chase you but they are not too clever."
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 140.0" />
+        <TextItem 
+	    Text="When you eat a magic banana you'll make the worms run away"
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 100.0" />
+        <TextItem 
+	    Text="for a while. Touching the screen will make Larry go into" 
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 60.0" />
+        <TextItem 
+	    Text="a cherry 'frenzy'. He'll ignore everything around him but"
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 20.0" />
+        <TextItem 
+	    Text="cherries, OMG cherries..." 
+	    Size="0.9"
+	    Center="true"
+	    Position="450.0 -20.0" />
+
+    </Menu>
+
+    <Menu 
+        Text="Credits" 
+	Size="1.5"
+        Info="Greetings and salutations go out to..."
+	Position="820.0 90.0">
+
+        <TextItem 
+	    Text="Oh My God, Cherries!"
+	    Center="true"
+	    Info="Mmmmmh cherries."
+	    Size="2.3"
+	    Position="450.0 370.0"/>
+        <TextItem 
+	    Text="Copyright (C) 2010 Frank Becker"
+	    Center="true"
+	    Info=""
+	    Size="1.1"
+	    Position="450.0 310.0" />
+
+	<ActionItem 
+	    Text="Click to visit"
+	    Info=""
+	    Size="1.1"
+	    Action="OpenURL" 
+	    Position="450.0 220.0" />
+	<ActionItem 
+	    Text="games.mooflu.com"
+	    Info=""
+	    Size="2.0"
+	    Action="OpenURL" 
+	    Position="450.0 170.0" />
+
+        <TextItem 
+	    Text="Special thanks to:"
+	    Center="true"
+	    Info="Danke schoen. Muchas gracias. Merci."
+	    Size="1.00"
+	    Position="450.0 70.0" />
+        <TextItem 
+	    Text="-- Lee Thomason (TinyXml) --"
+	    Center="true"
+	    Info="Goto tinyxml.sourceforge.net for details."
+	    Size="1.20"
+	    Position="450.0 10.0" />
+        <TextItem 
+	    Text="VERSION"
+	    Center="true"
+	    Size="0.80"
+	    Position="450.0 -50.0" />
+    </Menu>
+
+    <Menu 
+        Text="Setup" 
+	Size="1.5"
+        Info="Change this'n that."
+	Position="820.0 460.0">
+
+	<Enum  
+	    Text="Skill: " 
+	    Info="Click to change skill level for next new game."
+	    Position="180.0 300.0"
+	    Variable="skill" 
+	    Values="Beginner:Normal:Expert:Eagle Eye:OMG!" />
+
+	<Bool  
+	    Text="Online Scores" 
+	    Info="Submit and receive online high-scores."
+	    Position="180.0 190.0"
+	    Variable="onlineScores" />
+
+	<Bool  
+	    Text="Show FPS" 
+	    Info="Show or hide frames per second counter."
+	    Position="180.0 80.0"
+	    Variable="showFPS" />
+    </Menu>
+
+</Menu>
