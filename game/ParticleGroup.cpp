@@ -10,6 +10,7 @@
 #include <Constants.hpp>
 #include <FindHash.hpp>
 #include <Enemy.hpp>
+#include <Hero.hpp>
 using namespace std;
 
 hash_map<const string, ParticleType*, hash<const string>, std::equal_to<const string>> ParticleGroup::_particleTypeMap;

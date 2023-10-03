@@ -153,11 +153,11 @@ void MenuManager::makeMenu(TiXmlNode* _node) {
 }
 
 bool MenuManager::update(void) {
-    static float nextTime = Timer::getTime() + 0.5f;
-    float thisTime = Timer::getTime();
+    static double nextTime = Timer::getTime() + 0.5;
+    double thisTime = Timer::getTime();
     if (thisTime > nextTime) {
         updateSettings();
-        nextTime = thisTime + 0.5f;
+        nextTime = thisTime + 0.5;
     }
     _prevAngle = _angle;
     _angle += 10.0f;
@@ -280,13 +280,8 @@ bool MenuManager::draw(void) {
 
     GLBitmapCollection* icons = BitmapManagerS::instance()->getBitmap("bitmaps/atlas");  //"bitmaps/menuIcons");
     icons->bind();
-    //glColor4f(1.0, 1.0, 1.0, 1.0);
-    float gf = GameState::frameFractionOther;
-    float interpMouseX = _prevMouseX + (_mouseX - _prevMouseX) * gf;
-    float interpMouseY = _prevMouseY + (_mouseY - _prevMouseY) * gf;
     icons->setColor(1.0, 1.0, 1.0, 1.0);
-    icons->Draw(_pointer, interpMouseX, interpMouseY, 0.5, 0.5);
-    //glDisable(GL_TEXTURE_2D);
+    icons->Draw(_pointer, _mouseX, _mouseY, 0.5, 0.5);
 
     return true;
 }
@@ -339,7 +334,7 @@ void MenuManager::input(const Trigger& trigger, const bool& isDown) {
                         Enter();
                         break;
 
-                    case SDLK_ESCAPE:
+                    case ESCAPE_KEY:
                         if (!Exit()) {
                             turnMenuOff();
                         }
@@ -350,6 +345,14 @@ void MenuManager::input(const Trigger& trigger, const bool& isDown) {
                         break;
                     case SDLK_DOWN:
                         Down();
+                        break;
+
+                    case SDLK_TAB:
+                        if (trigger.data2 & KMOD_SHIFT) {
+                            Up();
+                        } else {
+                            Down();
+                        }
                         break;
 
                     case SDLK_F6:
@@ -385,8 +388,8 @@ void MenuManager::input(const Trigger& trigger, const bool& isDown) {
                 Clamp(_mouseY, 0.0f, 750.0);
 #else
 
-                _mouseX += (trigger.fData1 * 10.0f);
-                _mouseY += (trigger.fData2 * 10.0f);
+                _mouseX += trigger.fData1;
+                _mouseY += trigger.fData2;
 
                 Clamp(_mouseX, 0.0f, 1000.0f);
                 Clamp(_mouseY, 0.0f, 750.0f);

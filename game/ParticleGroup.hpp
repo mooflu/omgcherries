@@ -7,7 +7,6 @@
 #include <string>
 #include <hashMap.hpp>
 
-#include <Constants.hpp>
 #include <HashString.hpp>
 #include <ParticleInfo.hpp>
 #include <ParticleType.hpp>

@@ -70,12 +70,12 @@ VideoBase::~VideoBase() {
 }
 
 void VideoBase::reload(void) {
-    //BitmapManagerS::instance()->reset();
-    BitmapManagerS::instance()->reload();
-    //FontManagerS::instance()->reset();
-    FontManagerS::instance()->reload();
-
+    BitmapManagerS::instance()->reset();
+    FontManagerS::instance()->reset();
     ModelManagerS::instance()->reset();
+
+    BitmapManagerS::instance()->reload();
+    FontManagerS::instance()->reload();
     ModelManagerS::instance()->reload();
 
     std::list<ResolutionChangeObserverI*>::iterator i;
@@ -210,10 +210,10 @@ bool VideoBase::setVideoMode(void) {
     //reset mouse position ang grab-state
     InputS::instance()->resetMousePosition();
 
-#if 0
-    //Only implemented on Mac and has focus problems
-    SDL_SetRelativeMouseMode( SDL_TRUE);
+#if 1
+    SDL_SetRelativeMouseMode(SDL_TRUE);
 #else
+    // SDL_SetRelativeMouseMode used to only work on Mac
     SDL_ShowCursor(SDL_DISABLE);
     bool grabMouse = true;
     ConfigS::instance()->getBoolean("grabMouse", grabMouse);
@@ -323,10 +323,10 @@ void VideoBase::setResolutionConfig(int width, int height, bool fullscreen) {
 }
 
 bool VideoBase::update(void) {
-    static float nextTime = Timer::getTime() + 0.5f;
-    float thisTime = Timer::getTime();
+    static double nextTime = Timer::getTime() + 0.5;
+    double thisTime = Timer::getTime();
     if (thisTime > nextTime) {
-        nextTime = thisTime + 0.5f;
+        nextTime = thisTime + 0.5;
         return updateSettings();
     }
     return true;

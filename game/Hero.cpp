@@ -26,6 +26,7 @@
 #include <Input.hpp>
 #include <RandomKnuth.hpp>
 #include <PuckMaze.hpp>
+#include <Constants.hpp>
 
 #include <BitmapManager.hpp>
 

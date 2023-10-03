@@ -44,10 +44,6 @@ Input::Input(void) :
     _callbackManager(),
     _mousePos(0, 0),
     _mouseDelta(0, 0),
-    _memoryDX(0.0),
-    _memoryDY(0.0),
-    _dampVal(0.0),
-    _sensitivity(0.5),
     _interceptor(0),
     _touchCount(0) {
     XTRACE();
@@ -68,7 +64,7 @@ const vec2f& Input::mousePos(void) {
 }
 
 void Input::resetMousePosition() {
-    _mousePos = vec2f(VideoBaseS::instance()->getWidth(), VideoBaseS::instance()->getHeight()) / 2;
+    _mousePos = vec2f((float)VideoBaseS::instance()->getWidth(), (float)VideoBaseS::instance()->getHeight()) / 2;
 }
 
 bool Input::init(void) {
@@ -85,6 +81,11 @@ bool Input::init(void) {
         Config::ConfigItem& bind = (*i);
         string action = bind.key;
         string keyname = bind.value;
+#if defined(EMSCRIPTEN)
+        if (action == "EscapeAction") {
+            keyname = "BACKSPACE";
+        }
+#endif
         LOG_INFO << "action [" << action << "], "
                  << "keyname [" << keyname << "]" << endl;
 
@@ -95,8 +96,6 @@ bool Input::init(void) {
     }
 
     updateMouseSettings();
-    LOG_INFO << "Mouse smoothing: " << _dampVal << endl;
-    LOG_INFO << "Mouse sensitivity: " << _sensitivity << endl;
 
     //SDL_EnableKeyRepeat( 300,200); -- SDL1
 
@@ -106,17 +105,7 @@ bool Input::init(void) {
     return true;
 }
 
-void Input::updateMouseSettings(void) {
-    ConfigS::instance()->getFloat("mouseSmooth", _dampVal);
-    if ((_dampVal < 0.0) || (_dampVal > 0.999)) {
-        _dampVal = 0.0f;
-    }
-
-    ConfigS::instance()->getFloat("mouseSensitivity", _sensitivity);
-    if ((_sensitivity < 0.01) || (_sensitivity > 1.0)) {
-        _sensitivity = 0.1f;
-    }
-}
+void Input::updateMouseSettings(void) {}
 
 std::vector<TouchInfo*> Input::getActiveTouches() {
     std::vector<TouchInfo*> results;
@@ -337,7 +326,7 @@ void Input::handleTouch(SDL_TouchEvent& touch) {
         vec2i pos(touch.x, touch.y);  // p.y, 320-p.x);
 
         if (pos.x() < 75 && pos.y() < 105) {
-            pushKey(SDLK_ESCAPE);
+            pushKey(ESCAPE_KEY);
         } else if (pos.x() < 75 && pos.y() < 205) {
             pushKey(SDLK_p);
         } else if ((pos.x() < 75 && pos.y() < 305) || (touch.tapCount == 2))  //[tVec[0]->touch tapCount]==2) )
@@ -513,8 +502,16 @@ bool Input::tryGetTrigger(Trigger& trigger, bool& isDown) {
 
         case SDL_MOUSEMOTION:
             trigger.type = eMotionTrigger;
-            trigger.fData1 = event.motion.xrel;
-            trigger.fData2 = -event.motion.yrel;
+            trigger.fData1 = (float)event.motion.xrel;
+            trigger.fData2 = (float)-event.motion.yrel;
+            break;
+
+        case SDL_MOUSEWHEEL:
+            isDown = true;
+            trigger.type = eButtonTrigger;
+            trigger.data1 = SDL_MOUSEWHEEL;
+            trigger.data2 = event.wheel.x;
+            trigger.data3 = event.wheel.y;
             break;
 
         case SDL_TEXTINPUT:
@@ -522,7 +519,7 @@ bool Input::tryGetTrigger(Trigger& trigger, bool& isDown) {
             trigger.type = eTextInputTrigger;
             trigger.text = event.text.text;
             trigger.data1 = -1;
-            trigger.data2 = strlen(event.text.text);
+            trigger.data2 = (int)strlen(event.text.text);
             break;
 
         case SDL_TEXTEDITING:
@@ -550,11 +547,11 @@ bool Input::update(void) {
     bool isDown;
     Trigger trigger;
 
-    static float nextTime = Timer::getTime() + 0.5f;
-    float thisTime = Timer::getTime();
+    static double nextTime = Timer::getTime() + 0.5;
+    double thisTime = Timer::getTime();
     if (thisTime > nextTime) {
         updateMouseSettings();
-        nextTime = thisTime + 0.5f;
+        nextTime = thisTime + 0.5;
     }
 
     _mouseDelta = vec2f(0, 0);
@@ -567,10 +564,8 @@ bool Input::update(void) {
 #ifndef IPHONE
         if (trigger.type == eMotionTrigger) {
             //LOG_INFO << "dx: " << trigger.fData1 << " dy: " << trigger.fData2 << "\n";
-
-            _mouseDelta = vec2f(trigger.fData1 * _sensitivity, trigger.fData2 * _sensitivity);
-            _mouseDelta = vec2f(feedbackFilter(_mouseDelta.x(), _dampVal, _memoryDX),
-                                feedbackFilter(_mouseDelta.y(), _dampVal, _memoryDY));
+            _mouseDelta += vec2f(trigger.fData1, trigger.fData2);
+            continue;
         }
 #endif
         //Note: motion triggers can't be bound
@@ -579,7 +574,7 @@ bool Input::update(void) {
             switch (trigger.type) {
                 case eKeyTrigger:
                     switch (trigger.data1) {
-                        case SDLK_ESCAPE:
+                        case ESCAPE_KEY:
                             validBind = false;
                             break;
                         default:
@@ -645,20 +640,14 @@ bool Input::update(void) {
             _bindMode = false;
         }
     }
-    /*
-    _mouseDelta = vec2f(
-        feedbackFilter( _mouseDelta.x(), _dampVal, _memoryDX),
-        feedbackFilter( _mouseDelta.y(), _dampVal, _memoryDY)
-    );
-    */
+
     if ((fabs(_mouseDelta.x()) > 1.0e-10) || (fabs(_mouseDelta.y()) > 1.0e-10)) {
         _mousePos += _mouseDelta;
-        Clampf(_mousePos.x(), 0, VideoBaseS::instance()->getWidth());
-        Clampf(_mousePos.y(), 0, VideoBaseS::instance()->getHeight());
+        Clampf(_mousePos.x(), 0, (float)VideoBaseS::instance()->getWidth());
+        Clampf(_mousePos.y(), 0, (float)VideoBaseS::instance()->getHeight());
 
         trigger.fData1 = _mouseDelta.x();
         trigger.fData2 = _mouseDelta.y();
-
         if (_interceptor) {
             //feed trigger to interceptor instead of normal callback mechanism
             _interceptor->input(trigger, true);
@@ -684,6 +673,12 @@ void Input::handleLine(const string line) {
 
     string action = t.next();
     string keyname = t.next();
+
+#if defined(EMSCRIPTEN)
+    if (action == "EscapeAction") {
+        keyname = "BACKSPACE";
+    }
+#endif
 
     LOG_INFO << "action [" << action << "], "
              << "keyname [" << keyname << "]" << endl;

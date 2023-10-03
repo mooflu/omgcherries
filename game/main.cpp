@@ -59,24 +59,30 @@ void showVersions(void) {
     PHYSFS_Version physFSVer;
     PHYSFS_getLinkedVersion(&physFSVer);
 
-    LOG_INFO << "SDL Version " << (int)sdlVer.major << "." << (int)sdlVer.minor << "." << (int)sdlVer.patch << endl;
-    const SDL_version* isdl = IMG_Linked_Version();
-    LOG_INFO << "SDL_image Version " << (int)isdl->major << "." << (int)isdl->minor << "." << (int)isdl->patch << endl;
-    const SDL_version* msdl = Mix_Linked_Version();
-    LOG_INFO << "SDL_mixer Version " << (int)msdl->major << "." << (int)msdl->minor << "." << (int)msdl->patch << endl;
-    LOG_INFO << "PhysFS Version " << (int)physFSVer.major << "." << (int)physFSVer.minor << "." << (int)physFSVer.patch
-             << endl;
+    LOG_INFO << "SDL Version "
+             << (int)sdlVer.major  << "."
+             << (int)sdlVer.minor  << "."
+             << (int)sdlVer.patch  << endl;
+    const SDL_version *isdl = IMG_Linked_Version();
+    LOG_INFO << "SDL_image Version "
+             << (int)isdl->major  << "."
+             << (int)isdl->minor  << "."
+             << (int)isdl->patch  << endl;
+    const SDL_version *msdl = Mix_Linked_Version();
+    LOG_INFO << "SDL_mixer Version "
+             << (int)msdl->major  << "."
+             << (int)msdl->minor  << "."
+             << (int)msdl->patch  << endl;
+    LOG_INFO << "PhysFS Version "
+             << (int)physFSVer.major  << "."
+             << (int)physFSVer.minor  << "."
+             << (int)physFSVer.patch  << endl;
     LOG_INFO << "zlib Version " << zlibVersion() << endl;
     LOG_INFO << "PNG Version " << png_get_header_version(NULL) << endl;
 }
 #endif
 
-#ifdef IPHONE
-bool startupGame(int argc, char* argv[])
-#else
-int main(int argc, char* argv[])
-#endif
-{
+void init(int argc, char* argv[]) {
 #ifdef IPHONEDIST
 #warning Logging off
     Trace::SetStreamBuffer(new NoopStreamBuf());
@@ -106,7 +112,7 @@ int main(int argc, char* argv[])
 #endif
         if (ResourceManagerS::instance()->getResourceSize("system/config.txt") < 0) {
             LOG_ERROR << "Sorry, unable to find game data!" << endl;
-            return 1;
+            return;
         }
     }
 
@@ -126,14 +132,73 @@ int main(int argc, char* argv[])
     if (GameState::isDeveloper) {
         cfg->dump();
     }
+}
+#if defined(EMSCRIPTEN)
+#include <emscripten.h>
+#include <emscripten/html5.h>
+bool configInitialized = false;
 
+void emPreInitLoop() {
+    int fsReady = EM_ASM_INT({ return Module.readyToStart; }, 100);
+
+    if (fsReady) {
+        if (!configInitialized) {
+            init(0, 0);
+            configInitialized = true;
+
+            if (!GameS::instance()->init()) {
+                emscripten_cancel_main_loop();
+                //emscripten_exit_with_live_runtime();
+            }
+        } else {
+            emscripten_request_pointerlock("#canvas", true);
+            Game::gameLoop();
+        }
+    }
+}
+#endif
+
+#ifdef IPHONE
+bool startupGame(int argc, char* argv[])
+#else
+int main(int argc, char* argv[])
+#endif
+{
 #ifndef IPHONE
-    //preLaunch(); //show demo dialog or splash screen
+
+#if defined(EMSCRIPTEN)
+    EM_ASM(var path = Module.UTF8ToString($0);
+           // Make a directory other than '/'
+           FS.mkdir(path);
+           // Then mount with IDBFS type
+           FS.mount(IDBFS, {}, path);
+
+           // Then sync
+           FS.syncfs(
+               true,
+               function(err) {
+                   if (err) {
+                       console.log('FS.syncfs error: ' + err)
+                   } else {
+                       console.log('Mounted IDBFS at: ' + path);
+                       Module.askUserToStart();
+                   }
+               });
+           , "OMGCherries");
+
+    // 0 fps means to use requestAnimationFrame; non-0 means to use setTimeout.
+    emscripten_set_main_loop(emPreInitLoop, 0, 1);
+    return 0;
+#else
+    init(argc, argv);
+
     // get ready!
     if (GameS::instance()->init()) {
         // let's go!
         GameS::instance()->run();
     }
+#endif
+
 #else
     return GameS::instance()->init();
 }
@@ -144,9 +209,6 @@ int shutdownGame(void) {
     // Fun is over. Cleanup time...
     GameS::cleanup();
 
-#ifndef IPHONE
-    //postLaunch(); //show demo "Buy Now" dialog
-#endif
     ConfigS::cleanup();
     ResourceManagerS::cleanup();
 

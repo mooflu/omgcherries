@@ -18,6 +18,8 @@
 #include "RandomKnuth.hpp"
 #include "StringUtils.hpp"
 
+#include "MenuManager.hpp"
+
 static RandomKnuth _random;
 
 #ifdef IPHONE
@@ -172,6 +174,8 @@ void TextInput::turnOff(void) {
 
     InputS::instance()->disableInterceptor();
     SDL_StopTextInput();
+
+    MenuManagerS::instance()->turnMenuOn();
 #endif
     _isOn = false;
 }

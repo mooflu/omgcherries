@@ -159,8 +159,13 @@ private:
 
 class EscapeAction : public Callback {
 public:
+#if defined(EMSCRIPTEN)
+    EscapeAction(void) :
+        Callback("EscapeAction", "BACKSPACE"),
+#else
     EscapeAction(void) :
         Callback("EscapeAction", "ESCAPE"),
+#endif
         _prevContext(Context::eUnknown) {
         XTRACE();
     }

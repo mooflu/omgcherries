@@ -55,19 +55,23 @@ Game::~Game() {
     ScoreKeeperS::instance()->save();
 #endif
 
-    // misc cleanup
     MenuManagerS::cleanup();
-    ModelManagerS::cleanup();
-    InputS::cleanup();
+    ParticleGroupManagerS::cleanup();
+
     AudioS::cleanup();
     delete _view;  //calls SDL_Quit
 
-    ParticleGroupManagerS::cleanup();
-    ResourceManagerS::cleanup();
+    ModelManagerS::cleanup();
     ScoreKeeperS::cleanup();
+    InputS::cleanup();
+
     PuckMazeS::cleanup();
 
     HeroS::cleanup();  //has to be after ParticleGroupManager
+
+    // Note: this shuts down PHYSFS
+    LOG_INFO << "ResourceManager cleanup..." << endl;
+    ResourceManagerS::cleanup();
 }
 
 bool Game::init(void) {

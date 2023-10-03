@@ -25,5 +25,5 @@ private:
     CallbackManager(const CallbackManager&);
     CallbackManager& operator=(const CallbackManager&);
 
-    hash_map<std::string, Callback*, hash<std::string>, equal_to<std::string>> _actionMap;
+    hash_map<std::string, Callback*, hash<std::string>, std::equal_to<std::string>> _actionMap;
 };
