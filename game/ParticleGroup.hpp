@@ -10,6 +10,8 @@
 #include <HashString.hpp>
 #include <ParticleInfo.hpp>
 #include <ParticleType.hpp>
+
+#include <Constants.hpp> // defines GAME_HAS_HERO_PARTICLE
 #ifdef GAME_HAS_HERO_PARTICLE
 #include <Hero.hpp>
 #endif
