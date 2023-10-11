@@ -218,6 +218,12 @@ bool CherriesView::draw(void) {
 
     glm::mat4& modelview = MatrixStack::model.top();
     modelview = glm::mat4(1.0);
+    {
+        Program* prog = ProgramManagerS::instance()->getProgram("texture");
+        prog->use();  //needed to set uniforms
+        GLint modelViewMatrixLoc = glGetUniformLocation(prog->id(), "modelViewMatrix");
+        glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_FALSE, glm::value_ptr(projection * modelview));
+    }
 
 #ifdef IPHONE
     glTranslatef(0, 1000, 0);
@@ -241,6 +247,13 @@ bool CherriesView::draw(void) {
 #endif
 
         modelview = glm::mat4(1.0);
+        {
+            Program* prog = ProgramManagerS::instance()->getProgram("texture");
+            prog->use();  //needed to set uniforms
+            GLint modelViewMatrixLoc = glGetUniformLocation(prog->id(), "modelViewMatrix");
+            glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_FALSE, glm::value_ptr(projection * modelview));
+        }
+
 #ifdef IPHONE
         glTranslatef(0, 480.0, 0);
         glRotatef(-90.0, 0, 0, 1);
@@ -344,6 +357,13 @@ bool CherriesView::draw(void) {
         projection = glm::ortho(-0.5f, VIDEO_ORTHO_WIDTH + 0.5f, -0.5f, VIDEO_ORTHO_HEIGHT + 0.5f, -1000.0f, 1000.0f);
 
         modelview = glm::mat4(1.0);
+        {
+            Program* prog = ProgramManagerS::instance()->getProgram("texture");
+            prog->use();  //needed to set uniforms
+            GLint modelViewMatrixLoc = glGetUniformLocation(prog->id(), "modelViewMatrix");
+            glUniformMatrix4fv(modelViewMatrixLoc, 1, GL_FALSE, glm::value_ptr(projection * modelview));
+        }
+
 #ifdef IPHONE
         glTranslatef(0, 1000, 0);
         glRotatef(-90.0, 0, 0, 1);
@@ -434,21 +454,18 @@ bool CherriesView::draw(void) {
             //glDisable(GL_TEXTURE_2D);
 
             sprintf(buff, "%d", ScoreKeeperS::instance()->getCurrentScore());
+            scoreFont.setColor(1.0, 1.0, 1.0, 1.0);
             scoreFont.DrawString(buff, tx, ty, size, size);
             ty += tdy;
 
             sprintf(buff, "%d", ScoreKeeperS::instance()->getHighScore());
+            scoreFont.setColor(1.0, 1.0, 1.0, 1.0);
             scoreFont.DrawString(buff, tx, ty, size, size);
             ty += tdy;
 
             float bLen = 1.0f;
-            float he = HeroS::instance()->Energy();
-            if (he < 0.0) {
-                he = 100.0;
-            }
-            if (he > 100.0) {
-                he = 100.0;
-            }
+            float he = HeroS::instance()->Energy() / 3.0f; // Banana timer
+            Clamp(he, 0.0, 100.0);
 #if OLD_DRAW
             glColor4f(1.0f, 1.0f, 0.1f, 0.5f);
             GLfloat quadVerticesEnergy[] = {
