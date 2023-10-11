@@ -28,9 +28,6 @@ public:
     virtual ~TapAction() { XTRACE(); }
 
     virtual void performAction(Trigger&, bool isDown);
-
-private:
-    int _numWeap;
 };
 
 class MotionAction : public Callback {

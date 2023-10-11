@@ -223,6 +223,10 @@ void Game::startNewGame(void) {
     ConfigS::instance()->getBoolean("allowVerticalMovement", allowVerticalMovement);
 }
 
+void Game::toggleCritterBoard(void) {
+    _view->toggleCritterBoard();
+}
+
 void Game::updateOtherLogic(void) {
     int stepCount = 0;
     float currentTime = GameState::mainTimer.getTime();

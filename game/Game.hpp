@@ -26,6 +26,7 @@ public:
     void reset(void);
     void nextLevel(void);
     void startNewGame(void);
+    void toggleCritterBoard(void);
 
 private:
     ~Game();

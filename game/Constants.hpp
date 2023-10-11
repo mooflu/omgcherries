@@ -34,8 +34,8 @@ inline long int lroundf(float x) {
 
 #define GAME_HAS_HERO_PARTICLE 1
 
-const std::string GAMETITLE = "OMGCherries";
-const std::string GAMEVERSION = "1.1";
+const std::string GAMETITLE = PACKAGE;
+const std::string GAMEVERSION = VERSION;
 
 const std::string HERO_GROUP = "Hero";
 const std::string HERO_BULLETS_GROUP = "HeroBullets";

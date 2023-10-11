@@ -158,8 +158,7 @@ void CritterBoard::performAction(Trigger& t, bool isDown) {
 
     //    LOG_INFO << "toggle CritterBoard..." << endl;
     if (HeroS::instance()->alive()) {
-        //FIXME: VideoBaseS::instance()->toggleCritterBoard();
-        //#warning FIXME
+        GameS::instance()->toggleCritterBoard();
     } else {
         if (t.data2 < 240) {
             GameS::instance()->startNewGame();
