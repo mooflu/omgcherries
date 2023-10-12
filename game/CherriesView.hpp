@@ -18,6 +18,7 @@
 #include <GLTexture.hpp>
 #include <GLBitmapFont.hpp>
 #include <TextInput.hpp>
+#include "VideoBase.hpp"
 
 #ifndef IPHONE
 const int VIDEO_DEFAULT_WIDTH = 640;
@@ -33,16 +34,17 @@ const int VIDEO_ORTHO_HEIGHT = 750;
 class Buffer;
 class VertexArray;
 
-class CherriesView {
+class CherriesView : public ResolutionChangeObserverI {
 public:
     CherriesView(void);
-    ~CherriesView();
+    virtual ~CherriesView();
 
     bool init(void);
     bool draw(void);
     void updateLogic(void);
 
     void toggleCritterBoard(void) { _boardVisible = !_boardVisible; }
+    virtual void resolutionChanged(int w, int h);
 
 private:
     CherriesView(const CherriesView&);

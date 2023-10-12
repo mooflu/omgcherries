@@ -590,11 +590,12 @@ void EnumSelectable::input(const Trigger& trigger, const bool& isDown, const Poi
 #ifdef IPHONE
             this->activate();
 #endif
-            if (trigger.data1 == -99)  //TODO: handle mouse wheel - sdl1 SDL_BUTTON_WHEELDOWN)
-            {
-                prevEnum();
-            } else {
-                nextEnum();
+            if (trigger.data1 == SDL_MOUSEWHEEL) {
+                if (trigger.data3 > 0) {
+                    nextEnum();
+                } else {
+                    prevEnum();
+                }
             }
         } break;
 
@@ -1074,11 +1075,12 @@ void ResolutionSelectable::input(const Trigger& trigger, const bool& isDown, con
                     (mouseY >= (_bRect.min.y + offset.y)) && (mouseY <= (_bRect.max.y + offset.y))) {
                     applyResolution();
                 } else {
-                    if (trigger.data1 == -99)  //TODO: handle mouse wheel - sdl1 SDL_BUTTON_WHEELDOWN)
-                    {
-                        prevResolution();
-                    } else {
-                        nextResolution();
+                    if (trigger.data1 == SDL_MOUSEWHEEL) {
+                        if (trigger.data3 > 0) {
+                            nextResolution();
+                        } else {
+                            prevResolution();
+                        }
                     }
                 }
             }

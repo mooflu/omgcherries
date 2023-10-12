@@ -115,6 +115,23 @@ bool VideoBase::init(void) {
     return true;
 }
 
+#ifdef DEBUG_OPENGL
+void GLAPIENTRY
+MessageCallback(GLenum source,
+    GLenum type,
+    GLuint id,
+    GLenum severity,
+    GLsizei length,
+    const GLchar* message,
+    const void* userParam)
+{
+    if (severity == GL_DEBUG_SEVERITY_LOW || severity == GL_DEBUG_SEVERITY_NOTIFICATION) {
+        return;
+    }
+    LOG_INFO << "GL Error: " << message << " - type: " << hex << type << " - severity: " << severity << "\n";
+}
+#endif
+
 bool VideoBase::setVideoMode(void) {
     ConfigS::instance()->getBoolean("fullscreen", _isFullscreen);
     ConfigS::instance()->getInteger("width", _width);
@@ -250,6 +267,12 @@ bool VideoBase::setVideoMode(void) {
     LOG_INFO << "  Version : " << glGetString(GL_VERSION) << endl;
     LOG_INFO << "  Context : " << major << "." << minor << endl;
     LOG_INFO << "  GLEW : " << glewGetString(GLEW_VERSION) << endl;
+
+#ifdef DEBUG_OPENGL
+    // During init, enable debug output
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
+#endif
 
 #if 0
     GLint range[2];

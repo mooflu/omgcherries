@@ -144,7 +144,7 @@ void MenuManager::loadMenuLevel(void) {
         _activeSelectables.insert(_activeSelectables.end(), sel);
     }
     _currentSelectable = _activeSelectables.begin();
-    activateSelectableUnderMouse();
+    activateSelectableUnderMouse(true);
 }
 
 void MenuManager::makeMenu(TiXmlNode* _node) {
@@ -246,7 +246,7 @@ bool MenuManager::draw(void) {
     float boardScaleX = orthoWidth * 0.3 / 150.0;
     float boardScaleY = orthoHeight * 0.4 / 150.0;
     _boardOffset.x = (int)((orthoWidth - (float)menuBoard->getWidth(_board) * boardScaleX) / 2.0);
-    _boardOffset.y = 50.0;  //(int)((orthoHeight - (float)menuBoard->getHeight(_board)*boardScaleY) / 4.5);
+    _boardOffset.y = 30.0;  //(int)((orthoHeight - (float)menuBoard->getHeight(_board)*boardScaleY) / 4.5);
 
     //glColor4f(1.0, 1.0, 1.0, 1.0f);
     //glEnable(GL_TEXTURE_2D);
@@ -411,8 +411,9 @@ void MenuManager::input(const Trigger& trigger, const bool& isDown) {
     }
 }
 
-void MenuManager::activateSelectableUnderMouse(void) {
+void MenuManager::activateSelectableUnderMouse(const bool& useFallback) {
     list<Selectable*>::iterator i;
+    bool foundSelectable = false;
     for (i = _activeSelectables.begin(); i != _activeSelectables.end(); i++) {
         Selectable* sel = *i;
         if (!sel) {
@@ -423,8 +424,12 @@ void MenuManager::activateSelectableUnderMouse(void) {
         if ((_mouseX >= (r.min.x + _boardOffset.x)) && (_mouseX <= (r.max.x + _boardOffset.x)) &&
             (_mouseY >= (r.min.y + _boardOffset.y)) && (_mouseY <= (r.max.y + _boardOffset.y))) {
             sel->activate();
+            foundSelectable = true;
             break;
         }
+    }
+    if (!foundSelectable && useFallback) {
+        _activeSelectables.front()->activate();
     }
 }
 

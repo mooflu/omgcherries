@@ -50,7 +50,7 @@ private:
     void loadMenuLevel(void);
     void clearActiveSelectables(void);
     void updateSettings(void);
-    void activateSelectableUnderMouse(void);
+    void activateSelectableUnderMouse(const bool& useFallback = false);
 
     TiXmlDocument* _menu;
 

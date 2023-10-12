@@ -171,7 +171,14 @@ bool CherriesView::init(void) {
 
     _frenzy = _board->getIndex("frenzy");
 
+    VideoBaseS::instance()->registerResolutionObserver(this);
+
     return true;
+}
+
+void CherriesView::resolutionChanged(int /*w*/, int /*h*/) {
+    ProgramManagerS::instance()->reset();
+    initGL3Test();
 }
 
 void CherriesView::updateLogic(void) {
@@ -198,6 +205,7 @@ bool CherriesView::draw(void) {
     float thisTime = Timer::getTime();
     if (thisTime > nextTime) {
         nextTime = thisTime + 0.5f;
+        VideoBaseS::instance()->updateSettings();
     }
 
     FPS::Update();
