@@ -478,7 +478,7 @@ bool Input::tryGetTrigger(Trigger& trigger, bool& isDown) {
 #ifndef NO_QUICK_EXIT
             if ((event.key.keysym.sym == SDLK_BACKQUOTE) ||
                 ((event.key.keysym.sym == SDLK_q) && (event.key.keysym.mod & MAIN_MODIFIER))) {
-                GameState::isAlive = false;
+                GameState::requestExit = true;
                 LOG_WARNING << "Quick Exit invoked..." << endl;
 
                 trigger.type = eUnknownTrigger;
@@ -536,7 +536,7 @@ bool Input::tryGetTrigger(Trigger& trigger, bool& isDown) {
             break;
 
         case SDL_QUIT:
-            GameState::isAlive = false;
+            GameState::requestExit = true;
             break;
 
         default:

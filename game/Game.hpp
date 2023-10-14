@@ -28,6 +28,8 @@ public:
     void startNewGame(void);
     void toggleCritterBoard(void);
 
+    static void gameLoop(void);
+
 private:
     ~Game();
     Game(void);

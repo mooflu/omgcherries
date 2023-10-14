@@ -20,24 +20,28 @@
 
 struct GameState {
     static bool isDeveloper;
-    static bool showFPS;
     static bool isAlive;
-    static float startOfGame;
+    static bool requestExit;
+
+    static bool showFPS;
+
     static float startOfStep;
     static float frameFractionOther;
     static float startOfGameStep;
     static float frameFraction;
+    static float startOfGame;
+
     static float horsePower;
     static int numObjects;
-
     static int enemyBulletCount;
     static int enemyAttackCount;
+
     static PausableTimer mainTimer;
     static PausableTimer stopwatch;
     static Context::ContextEnum context;
     static Skill::SkillEnum skill;
     static int worminess;
 
-    static bool isPirate;
     static std::string deviceId;
+    static bool isPirate;
 };

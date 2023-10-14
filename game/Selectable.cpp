@@ -1275,7 +1275,7 @@ void ActionSelectable::select(void) {
         //no confirm sound in this case
         return;
     } else if (_action == "Quit") {
-        GameState::isAlive = false;
+        GameState::requestExit = true;
     } else if (_action == "OpenURL") {
         openURL("http://games.mooflu.com/");
     }

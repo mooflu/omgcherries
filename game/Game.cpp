@@ -36,6 +36,11 @@
 #include <MenuManager.hpp>
 #include <ResourceManager.hpp>
 
+#if defined(EMSCRIPTEN)
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 static RandomKnuth _random;
 
 Game::Game(void) {
@@ -300,40 +305,65 @@ void Game::updateInGameLogic(void) {
     }
 }
 
-void Game::run(void) {
+void Game::gameLoop(void) {
     XTRACE();
-
+    Game& game = *GameS::instance();
     Audio& audio = *AudioS::instance();
     Input& input = *InputS::instance();
 
-#ifndef IPHONE
-    while (GameState::isAlive)
-#endif
-    {
-        switch (GameState::context) {
-            case Context::eInGame:
-                //stuff that only needs updating when game is actually running
-                updateInGameLogic();
-                break;
+    switch (GameState::context) {
+        case Context::eInGame:
+            //stuff that only needs updating when game is actually running
+            game.updateInGameLogic();
+            break;
 
-            default:
-                break;
-        }
-
-        //stuff that should run all the time
-        updateOtherLogic();
-
-        input.update();
-        audio.update();
-        _view->draw();
-
-        _random.random();  //randomize a bit
-
-        GLenum err;
-        while ((err = glGetError()) != GL_NO_ERROR) {
-            LOG_ERROR << "GL ERROR: " << std::hex << err << "\n";
-        }
-
-        VideoBaseS::instance()->swap();
+        default:
+            break;
     }
+
+    //stuff that should run all the time
+    game.updateOtherLogic();
+
+    input.update();
+    audio.update();
+    game._view->draw();
+    VideoBaseS::instance()->swap();
+
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+        LOG_ERROR << "GL ERROR: " << std::hex << err << "\n";
+    }
+
+#if defined(EMSCRIPTEN)
+    if (GameState::requestExit) {
+        GameS::cleanup();
+        ConfigS::cleanup();
+
+        EM_ASM(console.log('FS.syncfs...'); FS.syncfs(function(err) {
+            if (err) {
+                console.log('FS.syncfs error: ' + err)
+            }
+            console.log('syncfs done');
+            Module.gamePostRun();
+        }););
+
+        emscripten_exit_pointerlock();
+        emscripten_cancel_main_loop();
+        //emscripten_exit_with_live_runtime();
+    }
+#endif
+}
+
+void Game::run(void) {
+    XTRACE();
+
+    // Here it is: the main loop.
+    LOG_INFO << "Entering Main loop." << endl;
+#if defined(IPHONE)
+    Game::gameLoop();
+#else
+    while (!GameState::requestExit) {
+        Game::gameLoop();
+    }
+#endif
 }

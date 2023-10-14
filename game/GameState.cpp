@@ -15,21 +15,28 @@
 #include <GameState.hpp>
 
 bool GameState::isDeveloper = false;
-bool GameState::showFPS = false;
+bool GameState::requestExit = false;
 bool GameState::isAlive = true;
-float GameState::startOfGame = 0;
+
+bool GameState::showFPS = false;
+
 float GameState::startOfStep = 0;
 float GameState::frameFractionOther = 0.0;
 float GameState::startOfGameStep = 0;
 float GameState::frameFraction = 0.0;
+float GameState::startOfGame = 0;
+
 float GameState::horsePower = 100.0;
 int GameState::numObjects = 0;
 int GameState::enemyBulletCount = 0;
 int GameState::enemyAttackCount = 0;
-Context::ContextEnum GameState::context = Context::eUnknown;
+
 PausableTimer GameState::mainTimer;
 PausableTimer GameState::stopwatch;
+Context::ContextEnum GameState::context = Context::eUnknown;
+
 Skill::SkillEnum GameState::skill = Skill::eBeginner;
 int GameState::worminess = 0;
-bool GameState::isPirate = false;
+
 std::string GameState::deviceId("Desktop");
+bool GameState::isPirate = false;
