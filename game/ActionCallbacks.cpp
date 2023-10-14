@@ -55,7 +55,7 @@ void MotionLeftAction::performAction(Trigger&, bool isDown) {
     //    XTRACE();
     switch (GameState::context) {
         case Context::eInGame:
-            HeroS::instance()->move(Direction::eLeft, isDown);
+            HeroS::instance()->applyDirection(Direction::eLeft, isDown);
             break;
         case Context::eCameraFlyby:
             CameraS::instance()->move(Direction::eLeft, isDown);
@@ -69,7 +69,7 @@ void MotionRightAction::performAction(Trigger&, bool isDown) {
     //    XTRACE();
     switch (GameState::context) {
         case Context::eInGame:
-            HeroS::instance()->move(Direction::eRight, isDown);
+            HeroS::instance()->applyDirection(Direction::eRight, isDown);
             break;
         case Context::eCameraFlyby:
             CameraS::instance()->move(Direction::eRight, isDown);
@@ -83,7 +83,7 @@ void MotionUpAction::performAction(Trigger&, bool isDown) {
     //    XTRACE();
     switch (GameState::context) {
         case Context::eInGame:
-            HeroS::instance()->move(Direction::eUp, isDown);
+            HeroS::instance()->applyDirection(Direction::eUp, isDown);
             break;
         case Context::eCameraFlyby:
             CameraS::instance()->move(Direction::eUp, isDown);
@@ -97,7 +97,7 @@ void MotionDownAction::performAction(Trigger&, bool isDown) {
     //    XTRACE();
     switch (GameState::context) {
         case Context::eInGame:
-            HeroS::instance()->move(Direction::eDown, isDown);
+            HeroS::instance()->applyDirection(Direction::eDown, isDown);
             break;
         case Context::eCameraFlyby:
             CameraS::instance()->move(Direction::eDown, isDown);

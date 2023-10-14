@@ -50,7 +50,8 @@ Hero::Hero() :
     ParticleType("Hero"),
     pInfo(0),
     _tracer(0),
-    _maxY(MIN_Y) {
+    _maxY(MIN_Y),
+    _directions(0) {
     XTRACE();
     for (int i = 0; i < 360; i++) {
         _sint[i] = sin(i * ((float)M_PI / 180.0f));
@@ -80,6 +81,7 @@ void Hero::reset(void) {
     _moveDown = 0;
     _energy = 0;
     _doTrace = false;
+    _directions = 0;
 
     lastXPos = 0.0;
     lastYPos = 0.0;
@@ -192,6 +194,19 @@ bool Hero::update(ParticleInfo* p) {
         Track(newX, newY, CHERRY);
         _xPos = newX;
         _yPos = newY;
+    } else {
+        if (_directions & Direction::eDown) {
+            move(Direction::eDown, true);
+        }
+        if (_directions & Direction::eUp) {
+            move(Direction::eUp, true);
+        }
+        if (_directions & Direction::eLeft) {
+            move(Direction::eLeft, true);
+        }
+        if (_directions & Direction::eRight) {
+            move(Direction::eRight, true);
+        }
     }
 
     lastXPos = _xPos;
@@ -340,6 +355,15 @@ void Hero::move(float dx, float dy) {
     _yPos = newPos.y();
 
     Check(lroundf(_xPos), lroundf(_yPos));
+}
+
+void Hero::applyDirection(Direction::DirectionEnum dir, bool isDown) {
+    if (isDown) {
+        _directions = _directions | dir;
+    }
+    else {
+        _directions = _directions & ~dir;
+    }
 }
 
 void Hero::move(Direction::DirectionEnum dir, bool isDown) {

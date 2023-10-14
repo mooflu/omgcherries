@@ -394,6 +394,11 @@ bool Input::tryGetTrigger(Trigger& trigger, bool& isDown) {
         return false;
     }
 
+    if (event.type == SDL_KEYDOWN && event.key.repeat != 0) {
+        // skip key repeats
+        return false;
+    }
+
     switch (event.type) {
 #ifdef IPHONE
         case SDL_TOUCH:

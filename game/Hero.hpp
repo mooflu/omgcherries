@@ -46,6 +46,7 @@ public:
     void tap(bool isDown);
     void move(float dx, float dy);
     void move(Direction::DirectionEnum d, bool isDown);
+    void applyDirection(Direction::DirectionEnum d, bool isDown);
 
     bool Move(int& x, int& y, int dir);
     void Check(int x, int y);
@@ -89,6 +90,7 @@ private:
     int _invincibleUntil;
     int _isDyingDelay;
     int _age;
+    int _directions;
 
     float _sint[360];
     float _cost[360];

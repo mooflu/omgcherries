@@ -14,19 +14,14 @@
 // FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details
 //
 
-#ifdef HAS_NAMESPACE
-namespace
-#else
-struct
-#endif
-    Context {
-enum ContextEnum {
-    eUnknown,
-    eMenu,
-    eInGame,
-    ePaused,
-    eCameraFlyby,
-    eBoss,
-    eLAST
-};
+namespace Context {
+    enum ContextEnum {
+        eUnknown,
+        eMenu,
+        eInGame,
+        ePaused,
+        eCameraFlyby,
+        eBoss,
+        eLAST
+    };
 };  // namespace Context
