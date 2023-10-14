@@ -334,12 +334,14 @@ bool CherriesView::draw(void) {
                     }
                 }
 
+#ifndef EMSCRIPTEN
                 if (PuckMazeS::instance()->Points() < (_numStarVertices / 50)) {
                     glPointSize(cellSize - 1.0);
                 } else {
                     float ptSize = (max)((cellSize - 1.0) / 3.0, 1.0);
                     glPointSize(ptSize);
                 }
+#endif
 #if OLD_DRAW
                 glColor4f(0.6, 0.0, 0.0, 1.0f);
                 glEnable(GL_POINT_SMOOTH);

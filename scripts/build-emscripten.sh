@@ -93,10 +93,11 @@ pushd ${BUILD_DIR}
     popd
 
     pushd box2d
-    cmake \
+    emcmake cmake \
         -DCMAKE_INSTALL_PREFIX:PATH=${INSTALL_DIR} \
         -DCMAKE_PREFIX_PATH:PATH=${INSTALL_DIR} \
         -DBUILD_SHARED_LIBS:BOOL=OFF \
+        -DCMAKE_BUILD_TYPE=MinSizeRel \
         -DBOX2D_BUILD_UNIT_TESTS=OFF \
         -DBOX2D_BUILD_TESTBED=OFF \
         .

@@ -115,7 +115,7 @@ if(EMSCRIPTEN)
 #        -s FULL_ES3=1
 #        -s LEGACY_GL_EMULATION=1
 
-    set_target_properties(shaaft PROPERTIES LINK_FLAGS ${EMSCRIPTEN_LINK_FLAGS})
+    set_target_properties(omgcherries PROPERTIES LINK_FLAGS ${EMSCRIPTEN_LINK_FLAGS})
 endif()
 
 if(NOT EMSCRIPTEN)
@@ -138,6 +138,7 @@ else()
         ${SDL2_MIXER_LIBRARY}
         ${SDL2_IMAGE_LIBRARY}
         "${CMAKE_INSTALL_PREFIX}/lib/libphysfs.a"
+        "${CMAKE_INSTALL_PREFIX}/lib/libbox2d.a"
     )
 endif()
 
