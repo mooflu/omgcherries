@@ -4,22 +4,15 @@ config:
   height: 600
   skill: 0
   worms: 1
-  fullscreen: 1
-  showStarfield: 1
-  showNebulas: 1
   showFPS: 0
   showSparks: 0
-  mouseSensitivity: 0.200000
-  mouseSmooth: 0.700000
   playDefaultSoundtrack: 1
   playMusic: 1
   audio: true
   horsePower: 100
   developer: false
   debug: false
-  autofireOn: 1
-  resolutions: 1600x1200,1280x960,1152x864,1024x768,800x600,640x480,512x384
-  onlineScores: 1
+
 binds:
   CritterBoard: X
   Confirm: RETURN
