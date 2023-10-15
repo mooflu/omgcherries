@@ -51,6 +51,7 @@ void showInfo() {
 #include <png.h>
 #include <zlib.h>
 #include <physfs.h>
+#include "box2d/box2d.h"
 
 void showVersions(void) {
     SDL_version sdlVer;
@@ -78,7 +79,11 @@ void showVersions(void) {
              << (int)physFSVer.minor  << "."
              << (int)physFSVer.patch  << endl;
     LOG_INFO << "zlib Version " << zlibVersion() << endl;
-    LOG_INFO << "PNG Version " << png_get_header_version(NULL) << endl;
+    LOG_INFO << "PNG Version " << png_get_libpng_ver(NULL) << endl;
+    LOG_INFO << "Box2D Version "
+        << b2_version.major << "."
+        << b2_version.minor << "."
+        << b2_version.revision << endl;
 }
 #endif
 
