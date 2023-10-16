@@ -11,7 +11,7 @@ if(NOT EMSCRIPTEN)
     find_package(PhysFS REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(GLEW REQUIRED)
-    find_library(BOX2D_LIBRARY Box2D)
+    find_library(BOX2D_LIBRARY NAMES box2d REQUIRED) # >= 2.4 uses "box2d" - older versions use "Box2D"
 endif()
 
 set(RESOURCE_DAT ${PROJECT_SOURCE_DIR}/resource.dat)
