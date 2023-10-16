@@ -4,8 +4,6 @@ project(omgcherries C CXX)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/mooflu.common/utilscmake")
 
-set(VERSION "2.1")
-
 if (NOT VERSION)
     find_package (Git)
     if (GIT_FOUND)
@@ -76,6 +74,6 @@ if (APPLE)
         MACOSX_BUNDLE_BUNDLE_VERSION "${VERSION}"
         MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2023 Frank Becker"
         MACOSX_BUNDLE_GUI_IDENTIFIER "com.mooflu.OMGCherries"
-        MACOSX_BUNDLE_ICON_FILE "omgcherries"
+        MACOSX_BUNDLE_ICON_FILE "OMGCherries"
     )
 endif()
