@@ -173,21 +173,17 @@ void PauseGame::performAction(Trigger&, bool isDown) {
     if (!isDown) {
         return;
     }
-    /*
-    if( GameState::context == Context::eBoss)
-    {
-	LOG_INFO << "un-Bossing..." << endl;
-	GameState::context = _prevContext;
-	GameState::stopwatch.start();
+
+    if (GameState::context == Context::ePaused) {
+        LOG_INFO << "un-pausing..." << endl;
+        GameState::context = _prevContext;
+        GameState::stopwatch.start();
+    } else {
+        LOG_INFO << "pausing..." << endl;
+        _prevContext = GameState::context;
+        GameState::context = Context::ePaused;
+        GameState::stopwatch.pause();
     }
-    else
-    {
-	LOG_INFO << "Boss coming..." << endl;
-	_prevContext = GameState::context;
-	GameState::context = Context::eBoss;
-	GameState::stopwatch.pause();
-    }
- */
 }
 
 void EscapeAction::performAction(Trigger&, bool isDown) {

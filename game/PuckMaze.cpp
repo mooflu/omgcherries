@@ -237,7 +237,7 @@ void PuckMaze::draw(const float& x, const float& y, const float& z, const float&
         };
 
         GLVBO vbo;
-        vbo.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        vbo.setColor(0.8f, 0.6f, 0.1f, 0.5f);
         vbo.DrawTexQuad(v, t);
 #endif
     }

@@ -291,6 +291,14 @@ bool CherriesView::draw(void) {
             //glEnable(GL_TEXTURE_2D);
             _board->bind();
 
+
+            if (GameState::context == Context::ePaused) {
+                smallFont.setColor(1.0, 1.0, 1.0, 1.0);
+                float cx = (480.0 - smallFont.GetWidth("Paused", 1.0f)) / 2.0;
+                smallFont.DrawString("Paused", cx, 160, 1.0f, 1.0f);
+                return true;
+            }
+
             vmml::vec4f frenzyColor;
             if (HeroS::instance()->Frenzy()) {
                 frenzyColor = vmml::vec4f(1.0, 1.0, 1.0, 1.0);
