@@ -3,6 +3,8 @@ https://mooflu.github.io/omgcherries/omgcherries.html
 
 `arrows` slow and controlled move
 
+`mouse` fast move
+
 `mouse button` frenzy fast uncontrolled move
 
 `p` to pause
