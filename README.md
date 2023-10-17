@@ -17,3 +17,5 @@ https://mooflu.github.io/omgcherries/omgcherries.html
 
 # Introduction
 Collect all the cherries. Avoid the green worms. Use mouse button to go into frenzy to collect cherries super fast at the cost of movement control. 
+
+![snap00](https://github.com/mooflu/omgcherries/assets/693717/c6694531-c62f-43d2-82f6-3498acbdb7ea)
