@@ -179,6 +179,7 @@ bool CherriesView::init(void) {
 void CherriesView::resolutionChanged(int /*w*/, int /*h*/) {
     ProgramManagerS::instance()->reset();
     initGL3Test();
+    PuckMazeS::instance()->reset();
 }
 
 void CherriesView::updateLogic(void) {
