@@ -148,7 +148,7 @@ void SmokePuff::draw(ParticleInfo* p) {
     glTranslatef(pi.position.x - shiftX, pi.position.y - shiftY, pi.position.z);
 
     //rotate towards the camera
-    CameraS::instance()->billboard();
+    //CameraS::instance()->billboard();
 
     //	LOG_ERROR << pi.extra.x << endl;
     //glColor4f(1.0,1.0,1.0, pi.extra.z);
@@ -221,7 +221,7 @@ void MiniSmoke::draw(ParticleInfo* p) {
     glTranslatef(pi.position.x - shiftX, pi.position.y - shiftY, pi.position.z);
 
     //rotate towards the camera
-    CameraS::instance()->billboard();
+    //CameraS::instance()->billboard();
 
     //	LOG_ERROR << pi.extra.x << endl;
     glColor4f(1.0, 1.0, 1.0, pi.extra.z);
@@ -356,7 +356,7 @@ void FireSpark::draw(ParticleInfo* p) {
     glTranslatef(pi.position.x, pi.position.y, pi.position.z);
 
     //rotate towards the camera
-    CameraS::instance()->billboard();
+    //CameraS::instance()->billboard();
 
     glColor4f(1.0, 1.0, 1.0, p->extra.z);
 
@@ -566,7 +566,7 @@ void ScoreHighlight::draw(ParticleInfo* p) {
     glTranslatef(pi.position.x, pi.position.y, pi.position.z);
 
     //rotate towards the camera
-    CameraS::instance()->billboard();
+    //CameraS::instance()->billboard();
 
     //    glRotatef( pi.extra.x, 0,0,1);
 
