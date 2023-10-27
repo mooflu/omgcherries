@@ -369,9 +369,9 @@ FloatSelectable::FloatSelectable(bool enabled, const BoundingBox& rect, const st
     _xPos = (curVal - _min) * 140.0f / (_max - _min);
 
     //bounding box for double arrow
-    _bRect.min.x = _boundingBox.min.x + 142 + _sliderOffset;
+    _bRect.min.x = _boundingBox.min.x + 102 + _sliderOffset;
     _bRect.max.x = _bRect.min.x + 20;
-    _bRect.min.y = _boundingBox.min.y - 5;
+    _bRect.min.y = _boundingBox.min.y;
     _bRect.max.y = _bRect.min.y + 30;
 
     _slider = _icons->getIndex("Slider");
@@ -383,7 +383,7 @@ FloatSelectable::FloatSelectable(bool enabled, const BoundingBox& rect, const st
         LOG_ERROR << "DoubleArrow not found" << endl;
     }
 
-    _boundingBox.max.x = 170 + _sliderOffset + _icons->getWidth(_slider) * 1.6f;
+    _boundingBox.max.x = _bRect.min.x + _icons->getWidth(_slider) * 1.6f;
 
     _inputBox = _boundingBox;
 }
@@ -474,16 +474,6 @@ void FloatSelectable::activate(bool beQuiet) {
 }
 
 void FloatSelectable::draw(const Point2Di& offset) {
-#if 0
-    glColor4f( 0.2, 0.2, 1.0, 0.5);
-    vec3f v[4] = {
-        vec3f( _bRect.min.x+ offset.x+_xPos, _bRect.min.y+ offset.y, 0),
-        vec3f( _bRect.min.x+ offset.x+_xPos, _bRect.max.y+ offset.y, 0),
-        vec3f( _bRect.max.x+ offset.x+_xPos, _bRect.max.y+ offset.y, 0),
-        vec3f( _bRect.max.x+ offset.x+_xPos, _bRect.min.y+ offset.y, 0),
-    };
-    GLVBO::DrawQuad( GL_TRIANGLE_FAN, v);
-#endif
     TextOnlySelectable::draw(offset);
 
     _icons->bind();
@@ -502,13 +492,17 @@ void FloatSelectable::draw(const Point2Di& offset) {
         }
     }
 
-    //glEnable(GL_TEXTURE_2D);
     _icons->setColor(color);
-    _icons->DrawC(_slider, _boundingBox.min.x + offset.x + 221 + _sliderOffset, _boundingBox.min.y + offset.y + 10,
-                  1.1f, 0.5f);
-    _icons->DrawC(_doubleArrow, _boundingBox.min.x + offset.x + 152 + _sliderOffset + _xPos,
-                  _boundingBox.min.y + offset.y + 11, 0.8f, 0.8f);
-    //glDisable(GL_TEXTURE_2D);
+    _icons->DrawC(_slider, _boundingBox.min.x + offset.x + 180 + _sliderOffset, _boundingBox.min.y + offset.y + 15,
+                  1.6f, 0.4f);
+    _icons->DrawC(_doubleArrow, _boundingBox.min.x + offset.x + 112 + _sliderOffset + _xPos,
+                  _boundingBox.min.y + offset.y + 15, 0.8f, 0.8f);
+
+    float curVal = _min + _xPos * (_max - _min) / 140.0f;
+    char valStr[10];
+    sprintf(valStr, "%2.2f", curVal);
+    _fontWhite->DrawString(valStr, _boundingBox.max.x + offset.x,
+        _boundingBox.min.y + offset.y + 5, 0.5f, 0.5f);
 }
 
 //------------------------------------------------------------------------------

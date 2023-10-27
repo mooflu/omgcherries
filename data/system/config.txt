@@ -12,6 +12,7 @@ config:
   horsePower: 100
   developer: false
   debug: false
+  mouseSensitivity: 1
 
 binds:
   CritterBoard: X

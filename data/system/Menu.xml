@@ -215,6 +215,14 @@
             Variable="skill"
             Values="Beginner:Normal:Expert:Eagle Eye:OMG!" />
 
+        <Float
+            Text="Mouse Sensitivity"
+            Info="Change mouse speed."
+            Position="240.0 170.0"
+            Variable="mouseSensitivity"
+            Range="0.1 3.0"
+            SliderOffset="100"/>
+
     </Menu>
 
 </Menu>
