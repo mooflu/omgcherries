@@ -112,5 +112,6 @@ pushd ${BUILD_DIR}
     cmake --build . --config ${BUILD_TYPE} --parallel
     mkdir -p webapp
     cp game/omgcherries.* webapp
+    cp webapp/*.html webapp/index.html
 popd
 
