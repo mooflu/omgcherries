@@ -9,6 +9,7 @@
 #include "SDL.h"
 
 #include "Trace.hpp"
+#include "StringUtils.hpp"
 #include "Config.hpp"
 #include "Callback.hpp"
 #include "GameState.hpp"
@@ -56,7 +57,9 @@ Input::~Input() {
 
     ATMap::iterator i;
     for (i = _actionTriggerMap.begin(); i != _actionTriggerMap.end(); i++) {
-        delete i->second;
+        for (Trigger* t : i->second) {
+            delete t;
+        }
     }
 }
 
@@ -81,19 +84,24 @@ bool Input::init(void) {
     for (i = bindList.begin(); i != bindList.end(); i++) {
         Config::ConfigItem& bind = (*i);
         string action = bind.key;
-        string keyname = bind.value;
+        vector<string> keynames = StringUtils(bind.value).split(',');
 #if defined(EMSCRIPTEN)
         if (action == "EscapeAction") {
-            keyname = "BACKSPACE";
+            keynames[0] = "BACKSPACE";
         }
 #endif
         LOG_INFO << "action [" << action << "], "
-                 << "keyname [" << keyname << "]" << endl;
+                 << "keynames [" << bind.value << "]" << endl;
 
-        Trigger* trigger = new Trigger;
-        if (_keys.convertStringToTrigger(keyname, *trigger)) {
-            _actionTriggerMap[action] = trigger;
+        vector<Trigger*> actionTriggers;
+        for (auto keyname : keynames) {
+            Trigger* trigger = new Trigger;
+            if (_keys.convertStringToTrigger(keyname, *trigger)) {
+                LOG_INFO << "adding action trigger: " << keyname << endl;
+                actionTriggers.push_back(trigger);
+            }
         }
+        _actionTriggerMap[action] = actionTriggers;
     }
 
     updateMouseSettings();
@@ -597,6 +605,8 @@ bool Input::update(void) {
                 default:
                     break;
             }
+#if 0
+// action binding currently broken - but also not used in cherries
             if (validBind) {
                 //LOG_INFO << "Trying to get new bind for " << _action << "\n";
 
@@ -605,25 +615,28 @@ bool Input::update(void) {
                     _actionTriggerMap.erase(cb2->getActionName());
                 }
 
-                Trigger* t = findHash(_action, _actionTriggerMap);
+                auto it = _actionTriggerMap.find(_action); // trigger list for action
                 Callback* cb = _callbackManager.getCallback(_action);
 
-                if (t) {
+                if (it != _actionTriggerMap.end()) {
                     //get rid of previous trigger mapping
                     _actionTriggerMap.erase(_action);
-                    _callbackMap.erase(*t);
+                    for (auto* t : it->second) {
+                        _callbackMap.erase(*t);
+                    }
                 } else {
-                    t = new Trigger;
+
                 }
 
                 //update trigger with new settings
+                Trigger* t = new Trigger();
                 *t = trigger;
                 _actionTriggerMap[_action] = t;
                 _callbackMap[*t] = cb;
 
                 ConfigS::instance()->updateKeyword(_action, _keys.convertTriggerToString(*t), "binds");
             }
-
+#endif
             //go back to normal mode
             _bindMode = false;
             continue;
@@ -672,46 +685,19 @@ bool Input::update(void) {
     return true;
 }
 
-void Input::handleLine(const string line) {
-    //    XTRACE();
-    Tokenizer t(line);
-    string bindKeyword = t.next();
-    if (bindKeyword != "bind") {
-        return;
-    }
-
-    string action = t.next();
-    string keyname = t.next();
-
-#if defined(EMSCRIPTEN)
-    if (action == "EscapeAction") {
-        keyname = "BACKSPACE";
-    }
-#endif
-
-    LOG_INFO << "action [" << action << "], "
-             << "keyname [" << keyname << "]" << endl;
-
-    Trigger* trigger = new Trigger;
-    if (_keys.convertStringToTrigger(keyname, *trigger)) {
-        _actionTriggerMap[action] = trigger;
-    }
-}
-
-void Input::save(ostream& outfile) {
-    XTRACE();
-    outfile << "# --- Binding section --- " << endl;
-
-    hash_map<Trigger, Callback*, hash<Trigger>>::const_iterator ci;
-    for (ci = _callbackMap.begin(); ci != _callbackMap.end(); ci++) {
-        outfile << "bind " << ci->second->getActionName() << " " << _keys.convertTriggerToString(ci->first) << endl;
-    }
-}
-
 void Input::addCallback(Callback* cb) {
     if (cb) {
         _callbackManager.addCallback(cb);
 
+        auto it = _actionTriggerMap.find(cb->getActionName()); // trigger list for action
+        if (it != _actionTriggerMap.end()) {
+            vector<Trigger*> t = it->second;
+            for (auto* t : it->second) {
+                bind(*t, cb);
+            }
+        }
+
+#if 0
         Trigger* t = findHash(cb->getActionName(), _actionTriggerMap);
         if (!t) {
             LOG_INFO << "trigger not found for " << cb->getActionName() << " - using default\n";
@@ -730,14 +716,17 @@ void Input::addCallback(Callback* cb) {
         if (t) {
             bind(*t, cb);
         }
+#endif
     }
 }
 
 std::string Input::getTriggerName(std::string& action) {
+#if 0
     Trigger* t = findHash(action, _actionTriggerMap);
     if (t) {
         return _keys.convertTriggerToString(*t);
     }
+#endif
     return "Not assigned!";
 }
 

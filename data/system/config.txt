@@ -21,10 +21,10 @@ binds:
   TapAction: SPACE
   TapAction: MOUSEBUTTON1
   Motion: MOTION
-  MotionUp: UP
-  MotionDown: DOWN
-  MotionRight: RIGHT
-  MotionLeft: LEFT
+  MotionUp: UP,W
+  MotionDown: DOWN,S
+  MotionRight: RIGHT,D
+  MotionLeft: LEFT,A
   ChangeContext: C
   Snapshot: F6
   PauseGame: P
