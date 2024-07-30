@@ -1,4 +1,6 @@
-# Play
+
+
+# Play <img src="https://github.com/user-attachments/assets/088e4d99-669e-4f12-9586-09797468982b" width="28" />
 https://mooflu.github.io/omgcherries/omgcherries.html
 
 `arrows` slow and controlled move
